@@ -1,0 +1,21 @@
+# Conda environment for Light-Level Monitoring System
+# ROS2 Humble via RoboStack + Flask
+# Setup: conda env create -f environment.yml
+
+name: ros2env
+
+channels:
+  - conda-forge
+  - robostack-staging
+
+dependencies:
+  - python=3.10
+  - ros-humble-desktop
+  - ros-humble-std-msgs
+  - colcon-common-extensions
+  - flask
+  - flask-login
+  - pymysql
+  - pyserial
+  - werkzeug
+  - pip
