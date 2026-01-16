@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows is starting up...</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            cursor: wait;
+        }
+
+        .splash-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(180deg, #000000 0%, #000080 30%, #000080 70%, #000000 100%);
+            /* Fallback if no image */
+            /* In a real scenario we'd use the clouds.png, but css gradients can aproximate the 'blue sky' feel */
+            background: #4ab3e3;
+            /* Sky blue */
+        }
+
+        .clouds-bg {
+            /* CSS pattern to simulate clouds/sky */
+            background-image:
+                radial-gradient(circle at 50% 50%, white 10%, transparent 40%),
+                radial-gradient(circle at 20% 80%, white 5%, transparent 30%);
+            filter: blur(20px);
+            opacity: 0.6;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .logo-container {
+            z-index: 10;
+            text-align: center;
+        }
+
+        .win-logo-text {
+            font-family: Arial, sans-serif;
+            font-weight: 900;
+            font-size: 72px;
+            color: #000;
+            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
+            margin: 0;
+            letter-spacing: -2px;
+        }
+
+        .win-sub-text {
+            font-family: Arial, sans-serif;
+            font-size: 48px;
+            color: #000;
+            font-style: italic;
+            font-weight: normal;
+        }
+
+        .bottom-bar {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40px;
+            background: #000080;
+            /* Dark blue bar */
+            display: flex;
+            align-items: center;
+            padding-left: 20px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .scrolling-text {
+            display: none;
+            /* Win95 didn't have scrolling text usually, but 98 did? Or just a bar. */
+        }
+
+        .loading-bar-container {
+            position: absolute;
+            bottom: 50px;
+            width: 300px;
+            height: 15px;
+            background: #c0c0c0;
+            border: 2px solid #808080;
+            box-shadow: inset 2px 2px 2px #000;
+            z-index: 20;
+        }
+
+        .loading-bar-fill {
+            height: 100%;
+            background: #000080;
+            width: 0%;
+            animation: fillBar 4s linear forwards;
+        }
+
+        .copyright {
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+            font-family: sans-serif;
+            font-size: 11px;
+            color: white;
+            z-index: 20;
+        }
+
+        @keyframes fillBar {
+            0% {
+                width: 0%;
+            }
+
+            20% {
+                width: 15%;
+            }
+
+            50% {
+                width: 40%;
+            }
+
+            70% {
+                width: 70%;
+            }
+
+            90% {
+                width: 85%;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+    </style>
+    <script>
+        setTimeout(function () {
+            window.location.href = "{{ url_for('desktop') }}";
+        }, 4500); // 4.5s load time
+    </script>
+</head>
+
+<body>
+    <div class="splash-container">
+        <!-- Background "Clouds" approximation using CSS -->
+        <div
+            style="position:absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(#3a6ea5 0%, #6495ed 100%);">
+        </div>
+        <div
+            style="position:absolute; top:10%; right:10%; width:100px; height:60px; background:#fff; border-radius:50%; filter:blur(20px); opacity:0.6;">
+        </div>
+        <div
+            style="position:absolute; top:40%; left:20%; width:200px; height:80px; background:#fff; border-radius:50%; filter:blur(30px); opacity:0.4;">
+        </div>
+        <div
+            style="position:absolute; bottom:20%; right:30%; width:150px; height:70px; background:#fff; border-radius:50%; filter:blur(25px); opacity:0.5;">
+        </div>
+
+        <div class="logo-container">
+            <div
+                style="background: rgba(192,192,192,0.6); padding: 40px; border-radius: 10px; border: 2px solid white; box-shadow: 5px 5px 10px rgba(0,0,0,0.3);">
+                <div class="win-logo-text">Microsoft</div>
+                <div class="win-logo-text" style="font-size: 90px; margin-top:-20px;">Windows<span
+                        class="win-sub-text">95</span></div>
+            </div>
+        </div>
+
+        <div class="loading-bar-container">
+            <div class="loading-bar-fill"></div>
+        </div>
+
+        <div class="copyright">
+            Copyright © 1981-1995 Microsoft Corp.
+        </div>
+    </div>
+</body>
+
+</html>

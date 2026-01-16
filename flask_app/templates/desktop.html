@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 95 - Desktop</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/win95.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+    <style>
+        /* jQuery UI draggable override */
+        .ui-draggable-dragging {
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Desktop Wallpaper -->
+    <div class="desktop-wallpaper" id="desktop">
+
+        <!-- Desktop Icons -->
+        <div class="desktop-icons-container">
+            <div class="desktop-icon" ondblclick="openApp('monitor')">
+                <div class="desktop-icon-img">💡</div>
+                <div class="desktop-icon-text">Light Monitor</div>
+            </div>
+
+            <div class="desktop-icon" ondblclick="openApp('database')">
+                <div class="desktop-icon-img">🗄️</div>
+                <div class="desktop-icon-text">Database Manager</div>
+            </div>
+
+            <div class="desktop-icon" ondblclick="openApp('history')">
+                <div class="desktop-icon-img">📜</div>
+                <div class="desktop-icon-text">History Log</div>
+            </div>
+
+            <div class="desktop-icon" ondblclick="openApp('recycle')">
+                <div class="desktop-icon-img">🗑️</div>
+                <div class="desktop-icon-text">Recycle Bin</div>
+            </div>
+        </div>
+
+        <!-- System Message Box (Flash Messages) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div id="win-msg" class="window window-absolute"
+            style="top: 40%; left: 40%; width: 300px; display: block; z-index: 9999;">
+            <div class="window-title">
+                <span class="window-title-text">
+                    <span>⚠️</span>
+                    <span>System Message</span>
+                </span>
+                <div class="window-buttons">
+                    <button class="window-btn" onclick="document.getElementById('win-msg').remove()">×</button>
+                </div>
+            </div>
+            <div class="window-content" style="text-align: center;">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <img src="https://win98icons.alexmeub.com/icons/png/msg_warning-32x32.png"
+                        style="width: 32px; height: 32px;" alt="Warning">
+                    <div style="text-align: left;">
+                        {% for category, message in messages %}
+                        <div>{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <button class="btn" style="width: 80px;"
+                    onclick="document.getElementById('win-msg').remove()">OK</button>
+            </div>
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <!-- APP: Light Monitor -->
+        <div id="win-monitor" class="window window-absolute" style="top: 50px; left: 100px; width: 450px;">
+            <div class="window-title">
+                <span class="window-title-text">
+                    <span>💡</span>
+                    <span>Light-Level Monitor</span>
+                </span>
+                <div class="window-buttons">
+                    <button class="window-btn" onclick="minimizeWindow('win-monitor')">_</button>
+                    <button class="window-btn">□</button>
+                    <button class="window-btn" onclick="closeWindow('win-monitor')">×</button>
+                </div>
+            </div>
+            <div class="window-content" id="monitor-content">
+                <!-- Content loaded via AJAX or embedded -->
+                {% include 'dashboard_content.html' %}
+            </div>
+        </div>
+
+        <!-- APP: Database Manager -->
+        <div id="win-database" class="window window-absolute" style="top: 80px; left: 150px; width: 500px;">
+            <div class="window-title">
+                <span class="window-title-text">
+                    <span>🗄️</span>
+                    <span>Database Manager</span>
+                </span>
+                <div class="window-buttons">
+                    <button class="window-btn" onclick="minimizeWindow('win-database')">_</button>
+                    <button class="window-btn">□</button>
+                    <button class="window-btn" onclick="closeWindow('win-database')">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="flex-between" style="margin-bottom: 10px;">
+                    <label>Table:</label>
+                    <select id="db-table-select" class="" onchange="loadTable(this.value)">
+                        <option value="users">Users</option>
+                        <option value="light_readings">Light Readings</option>
+                        <option value="settings">Settings</option>
+                    </select>
+                    <button class="btn"
+                        onclick="loadTable(document.getElementById('db-table-select').value)">Refresh</button>
+                </div>
+
+                <div class="window-content-scrollable" style="height: 300px;">
+                    <table class="db-table" id="db-data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Created At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="status-bar">
+                <div class="status-section" id="db-status">Ready</div>
+            </div>
+        </div>
+
+        <!-- APP: History -->
+        <div id="win-history" class="window window-absolute" style="top: 110px; left: 200px; width: 400px;">
+            <div class="window-title">
+                <span class="window-title-text">
+                    <span>📜</span>
+                    <span>History Log</span>
+                </span>
+                <div class="window-buttons">
+                    <button class="window-btn" onclick="minimizeWindow('win-history')">_</button>
+                    <button class="window-btn">□</button>
+                    <button class="window-btn" onclick="closeWindow('win-history')">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="window-content-scrollable" style="height: 300px; background: white; padding: 5px;"
+                    id="history-log">
+                    <div class="history-entry">System started...</div>
+                    <!-- Logs go here -->
+                </div>
+                <div class="mt-10 text-center">
+                    <button class="btn" onclick="document.getElementById('history-log').innerHTML = ''">Clear
+                        Log</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Taskbar -->
+    <div class="taskbar">
+        <div class="start-button btn" onclick="toggleStartMenu()">
+            <!-- <img src="/static/img/win95.png" alt=""> -->
+            <span style="font-style: italic; font-weight: 900; margin-right: 2px;">❖</span>
+            Start
+        </div>
+
+        <div class="taskbar-divider"></div>
+
+        <div class="task-list" id="task-list">
+            <!-- Active tasks appear here -->
+            <div class="task-button" id="task-monitor" onclick="restoreWindow('win-monitor')" style="display: none;">
+                <span>💡</span> Light Monitor
+            </div>
+            <div class="task-button" id="task-database" onclick="restoreWindow('win-database')" style="display: none;">
+                <span>🗄️</span> Database
+            </div>
+            <div class="task-button" id="task-history" onclick="restoreWindow('win-history')" style="display: none;">
+                <span>📜</span> History
+            </div>
+        </div>
+
+        <div class="taskbar-divider"></div>
+
+        <div class="system-tray">
+            <img src="" class="icon-small">
+            <span id="clock">12:00 PM</span>
+        </div>
+    </div>
+
+    <!-- Start Menu -->
+    <div class="start-menu" id="start-menu">
+        <div class="start-menu-sidebar">
+            <span><b>Windows</b>95</span>
+        </div>
+        <div class="start-menu-content">
+            <div class="start-menu-item" onclick="openApp('monitor'); toggleStartMenu();">
+                <span>💡</span> Light Monitor
+            </div>
+            <div class="start-menu-item" onclick="openApp('database'); toggleStartMenu();">
+                <span>🗄️</span> Database Manager
+            </div>
+            <div class="start-menu-item" onclick="openApp('history'); toggleStartMenu();">
+                <span>📜</span> History Log
+            </div>
+            <div class="start-menu-separator"></div>
+            <div class="start-menu-item" onclick="window.location.href='{{ url_for('logout') }}'">
+                <span>🔑</span> Log Off...
+            </div>
+            <div class="start-menu-item" onclick="window.location.href='{{ url_for('logout') }}'">
+                <span>🛑</span> Shut Down...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Start Menu
+        function toggleStartMenu() {
+            const menu = document.getElementById('start-menu');
+            const btn = document.querySelector('.start-button');
+            if (menu.style.display === 'flex') {
+                menu.style.display = 'none';
+                btn.classList.remove('active');
+            } else {
+                menu.style.display = 'flex';
+                btn.classList.add('active');
+            }
+        }
+
+        // Close start menu when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.start-menu') && !e.target.closest('.start-button')) {
+                document.getElementById('start-menu').style.display = 'none';
+                document.querySelector('.start-button').classList.remove('active');
+            }
+        });
+
+        // Window Management
+        let zIndex = 100;
+
+        function openApp(appId) {
+            const winId = 'win-' + appId;
+            const taskId = 'task-' + appId;
+            const win = document.getElementById(winId);
+
+            if (win) {
+                win.style.display = 'block';
+                win.style.zIndex = ++zIndex;
+
+                // Show taskbar button
+                const taskBtn = document.getElementById(taskId);
+                if (taskBtn) {
+                    taskBtn.style.display = 'flex';
+                    taskBtn.classList.add('active');
+                }
+            }
+        }
+
+        function closeWindow(winId) {
+            document.getElementById(winId).style.display = 'none';
+            const appId = winId.replace('win-', '');
+            document.getElementById('task-' + appId).style.display = 'none';
+        }
+
+        function minimizeWindow(winId) {
+            document.getElementById(winId).style.display = 'none';
+            const appId = winId.replace('win-', '');
+            const taskBtn = document.getElementById('task-' + appId);
+            taskBtn.classList.remove('active');
+        }
+
+        function restoreWindow(winId) {
+            const win = document.getElementById(winId);
+            const appId = winId.replace('win-', '');
+            const taskBtn = document.getElementById('task-' + appId);
+
+            if (win.style.display === 'none') {
+                win.style.display = 'block';
+                win.style.zIndex = ++zIndex;
+                taskBtn.classList.add('active');
+            } else {
+                // If already open and active, minimize it
+                if (win.style.zIndex == zIndex) {
+                    minimizeWindow(winId);
+                } else {
+                    // Just bring to front
+                    win.style.zIndex = ++zIndex;
+                    taskBtn.classList.add('active');
+                }
+            }
+        }
+
+        // Make desktop icons functional
+        document.querySelectorAll('.desktop-icon').forEach(icon => {
+            icon.addEventListener('dblclick', function (e) {
+                e.stopPropagation(); // Prevent propagation
+                const action = this.getAttribute('ondblclick');
+                // Extract app name from function call string "openApp('name')" because eval is dangerous/messy
+                if (action && action.includes("openApp")) {
+                    const appName = action.match(/'([^']+)'/)[1];
+                    openApp(appName);
+                }
+            });
+
+            // click to select
+            icon.addEventListener('click', function (e) {
+                e.stopPropagation();
+                document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        // Deselect on desktop click
+        document.getElementById('desktop').addEventListener('click', function (e) {
+            if (e.target === this) {
+                document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+            }
+        });
+
+        // Drag Selection (Rubber band)
+        const desktop = document.getElementById('desktop');
+        let isDragging = false;
+        let startX, startY;
+        let selectionBox = null;
+
+        desktop.addEventListener('mousedown', function (e) {
+            // Only start if clicking directly on desktop and not on an icon or window
+            if (e.target !== desktop) return;
+
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+
+            // Remove existing selection
+            document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+
+            // Create selection box
+            selectionBox = document.createElement('div');
+            selectionBox.className = 'selection-box';
+            selectionBox.style.left = startX + 'px';
+            selectionBox.style.top = startY + 'px';
+            selectionBox.style.width = '0px';
+            selectionBox.style.height = '0px';
+            document.body.appendChild(selectionBox);
+        });
+
+        document.addEventListener('mousemove', function (e) {
+            if (!isDragging) return;
+
+            const currentX = e.clientX;
+            const currentY = e.clientY;
+
+            const width = Math.abs(currentX - startX);
+            const height = Math.abs(currentY - startY);
+            const left = Math.min(currentX, startX);
+            const top = Math.min(currentY, startY);
+
+            selectionBox.style.width = width + 'px';
+            selectionBox.style.height = height + 'px';
+            selectionBox.style.left = left + 'px';
+            selectionBox.style.top = top + 'px';
+
+            // Check for intersection with icons
+            const selectRect = selectionBox.getBoundingClientRect();
+
+            document.querySelectorAll('.desktop-icon').forEach(icon => {
+                const iconRect = icon.getBoundingClientRect();
+
+                if (iconRect.left < selectRect.right &&
+                    iconRect.right > selectRect.left &&
+                    iconRect.top < selectRect.bottom &&
+                    iconRect.bottom > selectRect.top) {
+                    icon.classList.add('selected');
+                } else {
+                    icon.classList.remove('selected');
+                }
+            });
+        });
+
+        document.addEventListener('mouseup', function (e) {
+            if (isDragging) {
+                isDragging = false;
+                if (selectionBox) {
+                    selectionBox.remove();
+                    selectionBox = null;
+                }
+            }
+        });
+
+        // Make windows draggable
+        // Simple drag implementation without jQuery UI for now to keep it dependency-light
+        // Or if jQuery UI is loaded, use it.
+        $(function () {
+            $(".window-absolute").draggable({
+                handle: ".window-title",
+                containment: "window",
+                stack: ".window-absolute",
+                start: function () {
+                    // Update active state in taskbar
+                    const appId = this.id.replace('win-', '');
+                    $('.task-button').removeClass('active');
+                    $('#task-' + appId).addClass('active');
+                }
+            });
+
+            // Open Monitor by default
+            openApp('monitor');
+        });
+
+        // Database Loader
+        function loadTable(table) {
+            const tbody = document.querySelector('#db-data-table tbody');
+            const thead = document.querySelector('#db-data-table thead tr');
+
+            tbody.innerHTML = '<tr><td colspan="3">Loading...</td></tr>';
+
+            fetch('/api/db/' + table)
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    if (data.error) {
+                        tbody.innerHTML = '<tr><td colspan="3" style="color:red">Error: ' + data.error + '</td></tr>';
+                        return;
+                    }
+
+                    // Set Headers
+                    if (table === 'users') {
+                        thead.innerHTML = '<th>ID</th><th>Username</th><th>Created At</th>';
+                    } else if (table === 'light_readings') {
+                        thead.innerHTML = '<th>ID</th><th>Light Level</th><th>Time</th>';
+                    } else if (table === 'settings') {
+                        thead.innerHTML = '<th>ID</th><th>Key</th><th>Value</th>';
+                    }
+
+                    // Set Rows
+                    if (data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="3">No records found.</td></tr>';
+                    } else {
+                        let html = '';
+                        data.forEach(function (row) {
+                            html += '<tr>';
+                            if (table === 'users') {
+                                html += '<td>' + row.id + '</td><td>' + row.username + '</td><td>' + new Date(row.created_at).toLocaleString() + '</td>';
+                            } else if (table === 'light_readings') {
+                                html += '<td>' + row.id + '</td><td>' + row.light_level + '</td><td>' + new Date(row.recorded_at).toLocaleTimeString() + '</td>';
+                            } else if (table === 'settings') {
+                                html += '<td>' + row.id + '</td><td>' + row.setting_key + '</td><td>' + row.setting_value + '</td>';
+                            }
+                            html += '</tr>';
+                        });
+                        tbody.innerHTML = html;
+                    }
+                    document.getElementById('db-status').textContent = 'Loaded ' + data.length + ' records from ' + table;
+                })
+                .catch(function (err) {
+                    tbody.innerHTML = '<tr><td colspan="3" style="color:red">Connection Error</td></tr>';
+                });
+        }
+
+        // Refresh History Log
+        function refreshHistory() {
+            const historyContainer = document.getElementById('history-log');
+
+            // Add current reading if available
+            fetch('/api/data')
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    const now = new Date();
+                    const timeStr = now.toLocaleTimeString();
+                    const ledState = data.light_level < data.threshold ? "ON" : "OFF";
+
+                    const entry = document.createElement('div');
+                    entry.className = 'history-entry';
+                    entry.textContent = `[${timeStr}] Light: ${data.light_level} | Threshold: ${data.threshold} | LED: ${ledState}`;
+
+                    historyContainer.insertBefore(entry, historyContainer.firstChild);
+
+                    // Limit to 50 entries
+                    while (historyContainer.children.length > 50) {
+                        historyContainer.removeChild(historyContainer.lastChild);
+                    }
+                });
+        }
+
+        // Auto-refresh history every 5 seconds if window is visible
+        setInterval(function () {
+            const win = document.getElementById('win-history');
+            if (win.style.display !== 'none') {
+                refreshHistory();
+            }
+        }, 5000);
+
+    </script>
+</body>
+
+</html>
+```

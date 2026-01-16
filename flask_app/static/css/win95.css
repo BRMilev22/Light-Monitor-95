@@ -1,0 +1,673 @@
+/*
+ * Windows 95/98 Retro Style CSS
+ * Classic grey, beveled borders, MS Sans Serif fonts
+ */
+
+/* Reset and base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'MS Sans Serif', 'Segoe UI', Tahoma, Geneva, sans-serif;
+    font-size: 11px;
+    background-color: #008080;
+    color: #000000;
+    min-height: 100vh;
+}
+
+/* Windows 95 classic colors */
+:root {
+    --win-bg: #c0c0c0;
+    --win-dark: #808080;
+    --win-darker: #404040;
+    --win-light: #dfdfdf;
+    --win-lighter: #ffffff;
+    --win-title: #000080;
+    --win-title-inactive: #808080;
+    --win-title-text: #ffffff;
+    --win-button: #c0c0c0;
+    --win-input-bg: #ffffff;
+    --win-highlight: #000080;
+    --teal-bg: #008080;
+}
+
+/* Classic beveled box - outset (raised) */
+.bevel-out {
+    border: 2px solid;
+    border-color: var(--win-lighter) var(--win-dark) var(--win-dark) var(--win-lighter);
+}
+
+/* Classic beveled box - inset (pressed/sunken) */
+.bevel-in {
+    border: 2px solid;
+    border-color: var(--win-dark) var(--win-lighter) var(--win-lighter) var(--win-dark);
+}
+
+/* ============ WINDOW FRAME ============ */
+
+.window {
+    background: var(--win-bg);
+    border: 2px solid;
+    border-color: var(--win-lighter) var(--win-darker) var(--win-darker) var(--win-lighter);
+    box-shadow: 1px 1px 0 0 #000;
+    max-width: 500px;
+    margin: 50px auto;
+}
+
+.window-title {
+    background: linear-gradient(90deg, var(--win-title), #1084d0);
+    color: var(--win-title-text);
+    font-weight: bold;
+    font-size: 11px;
+    padding: 3px 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+}
+
+.window-title-text {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.window-title-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.window-buttons {
+    display: flex;
+    gap: 2px;
+}
+
+.window-btn {
+    width: 16px;
+    height: 14px;
+    background: var(--win-bg);
+    border: 1px solid;
+    border-color: var(--win-lighter) var(--win-dark) var(--win-dark) var(--win-lighter);
+    font-size: 9px;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.window-btn:active {
+    border-color: var(--win-dark) var(--win-lighter) var(--win-lighter) var(--win-dark);
+}
+
+.window-content {
+    padding: 10px;
+}
+
+/* ============ FORM ELEMENTS ============ */
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+label {
+    display: block;
+    margin-bottom: 3px;
+    font-weight: normal;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="number"] {
+    width: 100%;
+    padding: 3px 5px;
+    font-family: inherit;
+    font-size: 11px;
+    background: var(--win-input-bg);
+    border: 2px solid;
+    border-color: var(--win-dark) var(--win-lighter) var(--win-lighter) var(--win-dark);
+    outline: none;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus {
+    background: var(--win-input-bg);
+}
+
+/* Classic Windows button */
+.btn {
+    font-family: inherit;
+    font-size: 11px;
+    padding: 4px 12px;
+    background: var(--win-button);
+    border: 2px solid;
+    border-color: var(--win-lighter) var(--win-dark) var(--win-dark) var(--win-lighter);
+    cursor: pointer;
+    min-width: 75px;
+}
+
+.btn:active {
+    border-color: var(--win-dark) var(--win-lighter) var(--win-lighter) var(--win-dark);
+    padding: 5px 11px 3px 13px;
+}
+
+.btn:focus {
+    outline: 1px dotted #000;
+    outline-offset: -4px;
+}
+
+.btn-primary {
+    font-weight: bold;
+}
+
+/* ============ SLIDER (Range Input) ============ */
+
+input[type="range"] {
+    width: 100%;
+    height: 24px;
+    background: var(--win-bg);
+    border: 2px solid;
+    border-color: var(--win-dark) var(--win-lighter) var(--win-lighter) var(--win-dark);
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 11px;
+    height: 20px;
+    background: var(--win-bg);
+    border: 2px solid;
+    border-color: var(--win-lighter) var(--win-dark) var(--win-dark) var(--win-lighter);
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-track {
+    height: 20px;
+    background: var(--win-bg);
+    border: 2px solid;
+    border-color: var(--win-dark) var(--win-lighter) var(--win-lighter) var(--win-dark);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 11px;
+    height: 20px;
+    background: var(--win-bg);
+    border: 2px solid;
+    border-color: var(--win-lighter) var(--win-dark) var(--win-dark) var(--win-lighter);
+    cursor: pointer;
+}
+
+/* ============ PROGRESS BAR ============ */
+
+.progress-container {
+    width: 100%;
+    height: 20px;
+    background: var(--win-bg);
+    border: 2px solid;
+    border-color: var(--win-dark) var(--win-lighter) var(--win-lighter) var(--win-dark);
+    padding: 2px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--win-title);
+    transition: width 0.3s ease;
+}
+
+/* ============ STATUS BAR ============ */
+
+.status-bar {
+    background: var(--win-bg);
+    border-top: 2px solid;
+    border-color: var(--win-dark);
+    padding: 3px 5px;
+    font-size: 11px;
+    display: flex;
+    gap: 5px;
+}
+
+.status-section {
+    padding: 1px 5px;
+    border: 1px solid;
+    border-color: var(--win-dark) var(--win-lighter) var(--win-lighter) var(--win-dark);
+    flex: 1;
+}
+
+/* ============ FLASH MESSAGES ============ */
+
+.flash-messages {
+    margin-bottom: 10px;
+}
+
+.flash {
+    padding: 8px;
+    margin-bottom: 5px;
+    border: 2px solid;
+}
+
+.flash-error {
+    background: #ffcccc;
+    border-color: var(--win-dark) var(--win-lighter) var(--win-lighter) var(--win-dark);
+}
+
+.flash-success {
+    background: #ccffcc;
+    border-color: var(--win-dark) var(--win-lighter) var(--win-lighter) var(--win-dark);
+}
+
+/* ============ DATA DISPLAY ============ */
+
+.data-box {
+    background: var(--win-input-bg);
+    border: 2px solid;
+    border-color: var(--win-dark) var(--win-lighter) var(--win-lighter) var(--win-dark);
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.data-value {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    color: var(--win-title);
+}
+
+.data-label {
+    text-align: center;
+    color: #666;
+    margin-top: 3px;
+}
+
+/* ============ FIELDSET (Group Box) ============ */
+
+fieldset {
+    border: 2px solid;
+    border-color: var(--win-dark) var(--win-lighter) var(--win-lighter) var(--win-dark);
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+legend {
+    padding: 0 5px;
+    font-weight: normal;
+}
+
+/* ============ LED INDICATOR ============ */
+
+.led-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid;
+    border-color: var(--win-dark) var(--win-lighter) var(--win-lighter) var(--win-dark);
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.led-on {
+    background: radial-gradient(circle at 30% 30%, #ffff00, #ffa500);
+    box-shadow: 0 0 10px #ffa500;
+}
+
+.led-off {
+    background: radial-gradient(circle at 30% 30%, #666, #333);
+}
+
+/* ============ LINKS ============ */
+
+a {
+    color: var(--win-title);
+}
+
+a:visited {
+    color: #800080;
+}
+
+/* ============ TABLE ============ */
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table td,
+.data-table th {
+    padding: 5px;
+    text-align: left;
+    border-bottom: 1px solid var(--win-dark);
+}
+
+/* ============ UTILITIES ============ */
+
+.text-center {
+    text-align: center;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.flex-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ============ DASHBOARD LAYOUT ============ */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+@media (max-width: 600px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .window {
+        margin: 10px;
+        max-width: none;
+    }
+}
+
+/* ============ DESKTOP ENVIRONMENT ============ */
+
+.desktop-wallpaper {
+    background-color: var(--teal-bg);
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    user-select: none;
+}
+
+/* Desktop Icons */
+.desktop-icons-container {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 1;
+}
+
+.desktop-icon {
+    width: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    text-align: center;
+}
+
+.desktop-icon-img {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 5px;
+    font-size: 32px;
+    /* For emoji fallback */
+}
+
+.desktop-icon-text {
+    color: white;
+    font-size: 11px;
+    text-shadow: 1px 1px 1px black;
+    padding: 2px;
+}
+
+.desktop-icon:active .desktop-icon-text {
+    background-color: var(--win-title);
+    outline: 1px dotted var(--win-title);
+}
+
+.desktop-icon:active .desktop-icon-img {
+    filter: brightness(0.5) sepia(1) hue-rotate(180deg) saturate(3);
+}
+
+/* ============ TASKBAR ============ */
+
+.taskbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 28px;
+    background: var(--win-bg);
+    border-top: 2px solid var(--win-lighter);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px;
+    z-index: 1000;
+}
+
+.start-button {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    height: 22px;
+    font-weight: bold;
+    font-size: 11px;
+    margin-right: 10px;
+    box-shadow: 1px 1px 0 #000;
+}
+
+.start-button img,
+.start-button span.icon {
+    width: 16px;
+    height: 16px;
+}
+
+.taskbar-divider {
+    width: 2px;
+    height: 20px;
+    background: var(--win-dark);
+    border-right: 1px solid var(--win-lighter);
+    margin: 0 5px;
+}
+
+.task-list {
+    flex: 1;
+    display: flex;
+    gap: 3px;
+    padding-left: 5px;
+}
+
+.task-button {
+    width: 160px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+    gap: 5px;
+    background: var(--win-bg);
+    border: 2px solid;
+    border-color: var(--win-lighter) var(--win-dark) var(--win-dark) var(--win-lighter);
+    cursor: pointer;
+    user-select: none;
+}
+
+.task-button.active {
+    background: var(--win-light);
+    border-color: var(--win-dark) var(--win-lighter) var(--win-lighter) var(--win-dark);
+    background-image: linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
+        linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-size: 2px 2px;
+    background-position: 0 0, 1px 1px;
+    font-weight: bold;
+}
+
+.system-tray {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 22px;
+    padding: 0 5px;
+    border: 2px solid;
+    border-color: var(--win-dark) var(--win-lighter) var(--win-lighter) var(--win-dark);
+    margin-left: 5px;
+    background: var(--win-bg);
+    min-width: 70px;
+    justify-content: center;
+}
+
+/* ============ START MENU ============ */
+
+.start-menu {
+    position: fixed;
+    bottom: 28px;
+    left: 2px;
+    width: 200px;
+    background: var(--win-bg);
+    border: 2px solid;
+    border-color: var(--win-lighter) var(--win-dark) var(--win-dark) var(--win-lighter);
+    display: none;
+    /* Hidden by default */
+    z-index: 1001;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.start-menu.open {
+    display: flex;
+}
+
+.start-menu-sidebar {
+    width: 25px;
+    background: var(--win-title);
+    display: flex;
+    align-items: flex-end;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    padding-bottom: 5px;
+}
+
+.start-menu-sidebar span {
+    transform: rotate(-90deg) translateX(5px);
+    white-space: nowrap;
+    transform-origin: bottom left;
+}
+
+.start-menu-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2px;
+}
+
+.start-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.start-menu-item:hover {
+    background: var(--win-title);
+    color: white;
+}
+
+.start-menu-separator {
+    height: 1px;
+    background: var(--win-dark);
+    border-bottom: 1px solid var(--win-lighter);
+    margin: 2px 5px;
+}
+
+/* ============ DRAGGABLE WINDOWS OVERRIDE ============ */
+
+.window-absolute {
+    position: absolute;
+    margin: 0;
+    min-width: 300px;
+    display: none;
+    /* Hidden by default */
+    z-index: 10;
+}
+
+.window-absolute.active {
+    z-index: 20;
+    display: block;
+}
+
+.window-absolute.minimized {
+    display: none;
+}
+
+.window-content-scrollable {
+    max-height: 400px;
+    overflow-y: auto;
+    background: white;
+    border: 2px solid;
+    border-color: var(--win-dark) var(--win-lighter) var(--win-lighter) var(--win-dark);
+}
+
+/* Database Table Styles */
+.db-table {
+    width: 100%;
+    font-size: 11px;
+    border-collapse: collapse;
+}
+
+.db-table th,
+.db-table td {
+    border: 1px solid #ccc;
+    padding: 2px 4px;
+}
+
+.db-table th {
+    background: var(--win-bg);
+    border-bottom: 1px solid black;
+    text-align: left;
+}
+
+.db-table tr:nth-child(even) {
+    background: #f0f0f0;
+}
+
+/* History Styles */
+.history-entry {
+    font-family: 'Courier New', monospace;
+    padding: 2px 5px;
+    border-bottom: 1px dotted #ccc;
+}
+
+/* ============ SELECTION BOX ============ */
+
+.selection-box {
+    position: absolute;
+    border: 1px dotted white;
+    background-color: rgba(0, 0, 128, 0.3);
+    z-index: 9999;
+    pointer-events: none;
+}
+
+/* Selected Icon State */
+.desktop-icon.selected .desktop-icon-text {
+    background-color: var(--win-title);
+    outline: 1px dotted var(--win-title);
+    color: white;
+}
+
+.desktop-icon.selected .desktop-icon-img {
+    filter: brightness(0.5) sepia(1) hue-rotate(180deg) saturate(3);
+}

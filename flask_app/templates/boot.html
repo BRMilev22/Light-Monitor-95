@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Award Plug and Play BIOS Extension v1.0A</title>
+    <style>
+        body {
+            background-color: black;
+            color: #c0c0c0;
+            /* Standard light grey text */
+            font-family: 'Courier New', Courier, monospace;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+            cursor: none;
+            font-size: 16px;
+            line-height: 1.2;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-weight: bold;
+        }
+
+        .energy-star-box {
+            border: 2px solid #c0c0c0;
+            padding: 5px;
+            width: 140px;
+            text-align: right;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .energy-star-logo {
+            /* Crude CSS Energy Star logo approximation */
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border-top: 20px solid #c0c0c0;
+            border-right: 20px solid transparent;
+            transform: rotate(-45deg);
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .energy-text {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 5px;
+        }
+
+        .energy-subtext {
+            text-align: center;
+            font-size: 10px;
+            margin-top: 2px;
+        }
+
+        .section {
+            margin-bottom: 15px;
+        }
+
+        .highlight {
+            color: white;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 40px;
+            font-family: inherit;
+            color: inherit;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 2px;
+            border: 1px solid #c0c0c0;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 12px;
+        }
+    </style>
+    <script>
+        setTimeout(function () {
+            window.location.href = "{{ url_for('login') }}";
+        }, 3500);
+    </script>
+</head>
+
+<body>
+    <div class="header">
+        <div>
+            Award Modular BIOS v4.51PG, An Energy Star Ally<br>
+            Copyright (C) 1984-98, Award Software, Inc.
+        </div>
+    </div>
+
+    <div class="energy-star-box">
+        <div style="font-size:24px; font-weight:bold; text-align:center;">EPA</div>
+        <div style="font-size:10px; text-align:center;">POLLUTION PREVENTER</div>
+    </div>
+
+    <div class="section">
+        PENTIUM-MMX CPU at 233MHz<br>
+        Memory Test : <span id="mem-test">0</span>K OK
+    </div>
+
+    <div class="section" id="drive-detect" style="visibility: hidden;">
+        Award Plug and Play BIOS Extension v1.0A<br>
+        Copyright (C) 1998, Award Software, Inc.<br>
+        <br>
+        Detecting HDD Primary Master ... <span id="hdd1"></span><br>
+        Detecting HDD Primary Slave ... <span id="hdd2"></span><br>
+        Detecting HDD Secondary Master ... <span id="cdrom"></span><br>
+        Detecting HDD Secondary Slave ... None
+    </div>
+
+    <div class="footer">
+        Press <strong>DEL</strong> to enter SETUP<br>
+        06/15/1998-i430TX-2A59IG0CC-00
+    </div>
+
+    <script>
+        // Memory Test Animation
+        let memory = 0;
+        const maxMemory = 65536;
+        const step = 2048;
+
+        const memInterval = setInterval(() => {
+            memory += step;
+            if (memory > maxMemory) {
+                memory = maxMemory;
+                clearInterval(memInterval);
+                document.getElementById('drive-detect').style.visibility = 'visible';
+                setTimeout(detectDrives, 500);
+            }
+            document.getElementById('mem-test').innerText = memory;
+        }, 50);
+
+        function detectDrives() {
+            setTimeout(() => { document.getElementById('hdd1').innerText = "QUANTUM FIREBALL ST3.2A"; }, 400);
+            setTimeout(() => { document.getElementById('hdd2').innerText = "None"; }, 800);
+            setTimeout(() => { document.getElementById('cdrom').innerText = "NEC CD-ROM DRIVE:282"; }, 1200);
+        }
+    </script>
+</body>
+
+</html>

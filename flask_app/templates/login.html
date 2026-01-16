@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to Windows{% endblock %}
+
+{% block content %}
+<!-- System Message Box (Flash Messages) -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div id="win-msg" class="window window-absolute"
+    style="top: 30%; left: 50%; transform: translateX(-50%); width: 300px; display: block; z-index: 9999;">
+    <div class="window-title">
+        <span class="window-title-text">
+            <span>ℹ️</span>
+            <span>Windows Networking</span>
+        </span>
+        <div class="window-buttons">
+            <button class="window-btn" onclick="document.getElementById('win-msg').remove()">×</button>
+        </div>
+    </div>
+    <div class="window-content" style="text-align: center;">
+        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+            <!-- Authentic Info Icon -->
+            <div style="font-size: 32px;">ℹ️</div>
+            <div style="text-align: left;">
+                {% for category, message in messages %}
+                <div>{{ message }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        <button class="btn" style="width: 80px;" onclick="document.getElementById('win-msg').remove()">OK</button>
+    </div>
+</div>
+{% endif %}
+{% endwith %}
+
+<div class="window" style="width: 350px; margin-top: 15vh;">
+    <div class="window-title">
+        <span class="window-title-text">
+            <span>🔑</span>
+            <span style="font-weight: bold; font-family: sans-serif;">Welcome to Windows</span>
+        </span>
+        <div class="window-buttons">
+            <button class="window-btn">?</button>
+            <button class="window-btn">×</button>
+        </div>
+    </div>
+    <div class="window-content">
+
+        <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+            <div style="padding-top: 10px;">
+                <img src="https://win98icons.alexmeub.com/icons/png/key_win-32x32.png" alt="Key"
+                    style="width: 32px; height: 32px; image-rendering: pixelated;">
+            </div>
+            <div style="flex: 1;">
+                <div style="margin-bottom: 5px;">
+                    Type a user name and password to log on to Windows.
+                </div>
+
+                <form method="POST">
+                    <div class="form-group flex-row">
+                        <label for="username" style="width: 80px;">User name:</label>
+                        <input type="text" id="username" name="username" required autofocus autocomplete="username"
+                            style="flex: 1;">
+                    </div>
+
+                    <div class="form-group flex-row">
+                        <label for="password" style="width: 80px;">Password:</label>
+                        <input type="password" id="password" name="password" required autocomplete="current-password"
+                            style="flex: 1;">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="flex-between" style="justify-content: flex-end; gap: 10px;">
+            <button class="btn btn-primary" onclick="document.querySelector('form').submit()">OK</button>
+            <button class="btn" onclick="document.querySelector('form').reset()">Cancel</button>
+        </div>
+
+    </div>
+</div>
+
+<!-- Register Link as a separate subtle hint -->
+<div style="text-align: center; margin-top: 20px;">
+    <a href="{{ url_for('register') }}" style="color: white; text-decoration: none;">New user? Click here to
+        register</a>
+</div>
+{% endblock %}

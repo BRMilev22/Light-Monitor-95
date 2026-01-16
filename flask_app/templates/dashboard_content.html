@@ -1,0 +1,111 @@
+<div class="dashboard-grid">
+    <!-- Light Level Display -->
+    <fieldset>
+        <legend>📊 Current Light Level</legend>
+        <div class="data-box">
+            <div class="data-value" id="light-value">{{ data.light_level }}</div>
+            <div class="data-label">Range: 0 (dark) - 1023 (bright)</div>
+        </div>
+        <div class="progress-container">
+            <div class="progress-bar" id="light-bar" style="width: {{ (data.light_level / 1023 * 100)|int }}%"></div>
+        </div>
+    </fieldset>
+
+    <!-- LED Status -->
+    <fieldset>
+        <legend>💡 LED Status</legend>
+        <div class="data-box text-center">
+            <div class="flex-row" style="justify-content: center;">
+                <span id="led-indicator"
+                    class="led-indicator {% if data.light_level < data.threshold %}led-on{% else %}led-off{% endif %}"></span>
+                <span id="led-text" style="font-size: 18px; font-weight: bold;">
+                    {% if data.light_level < data.threshold %}ON{% else %}OFF{% endif %} </span>
+            </div>
+            <div class="data-label mt-10">LED turns ON when light is below threshold</div>
+        </div>
+    </fieldset>
+</div>
+
+<!-- Threshold Control -->
+<fieldset>
+    <legend>⚙️ Threshold Control</legend>
+    <div class="flex-between">
+        <label for="threshold">Set threshold value:</label>
+        <span id="threshold-display">{{ data.threshold }}</span>
+    </div>
+    <input type="range" id="threshold" min="0" max="1023" value="{{ data.threshold }}"
+        oninput="document.getElementById('threshold-display').textContent = this.value">
+    <div class="flex-between mt-10">
+        <span>0 (very dark)</span>
+        <span>1023 (very bright)</span>
+    </div>
+    <div class="mt-10 text-center">
+        <button class="btn btn-primary" onclick="sendThreshold()">Apply</button>
+        <button class="btn"
+            onclick="document.getElementById('threshold').value=768; document.getElementById('threshold-display').textContent=768; sendThresholdCustom(768);">Reset
+            (768)</button>
+    </div>
+</fieldset>
+
+<!-- Connection Status -->
+<fieldset>
+    <legend>🔌 Arduino Status</legend>
+    <div class="data-box">
+        <div id="arduino-status">{{ data.status }}</div>
+    </div>
+</fieldset>
+
+<script>
+    // Dashboard specific scripts
+    function sendThreshold() {
+        const threshold = document.getElementById('threshold').value;
+        sendThresholdCustom(threshold);
+    }
+
+    function sendThresholdCustom(val) {
+        const formData = new FormData();
+        formData.append('threshold', val);
+
+        fetch('/api/threshold', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Status update handled by main loop or UI feedback here
+            });
+    }
+
+    // Poll for live data updates
+    function refreshData() {
+        fetch('/api/data')
+            .then(response => response.json())
+            .then(data => {
+                // Update light level
+                if (document.getElementById('light-value')) {
+                    document.getElementById('light-value').textContent = data.light_level;
+                    document.getElementById('light-bar').style.width = (data.light_level / 1023 * 100) + '%';
+
+                    // Update LED indicator
+                    const ledIndicator = document.getElementById('led-indicator');
+                    const ledText = document.getElementById('led-text');
+                    if (data.light_level < data.threshold) {
+                        ledIndicator.className = 'led-indicator led-on';
+                        ledText.textContent = 'ON';
+                    } else {
+                        ledIndicator.className = 'led-indicator led-off';
+                        ledText.textContent = 'OFF';
+                    }
+
+                    // Update Arduino status
+                    document.getElementById('arduino-status').textContent = data.status;
+                }
+            })
+            .catch(error => {
+                console.log('Connection lost');
+            });
+    }
+
+    // Start polling
+    setInterval(refreshData, 500);
+</script>
